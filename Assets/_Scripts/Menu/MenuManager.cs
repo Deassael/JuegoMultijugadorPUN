@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] MenuVisibility[] menus;
@@ -26,7 +27,6 @@ public class MenuManager : MonoBehaviour
             {
                 CloseMenu(menus[i]);
             }
-
         }
     }
     
