@@ -5,12 +5,12 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-
     [SerializeField] private TMP_InputField roomNameInputField;
     [SerializeField] private TMP_Text roomName;
     [SerializeField] private TMP_Text errorMessage;
@@ -18,8 +18,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject roomItemPrefab;
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject playerItemPrefab;
+    [SerializeField] private GameObject buttonStart;
 
-    
     public static Launcher Instance;
 
     private void Awake()
@@ -61,6 +61,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         MenuManager.Instance.OpenMenuName("Room");
         roomName.text = PhotonNetwork.CurrentRoom.Name;
+        
         foreach (Transform playerTransform in playerListContent)
         {
             Destroy(playerTransform.gameObject);
@@ -72,6 +73,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             Instantiate(playerItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
+        buttonStart.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -114,5 +116,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(playerItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        buttonStart.SetActive(PhotonNetwork.IsMasterClient);
+    }
+
+    public void StarGame()
+    {
+        PhotonNetwork.LoadLevel(1);
     }
 }
